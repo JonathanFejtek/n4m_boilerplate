@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <title>Socket.IO Test</title>
+        <!-- <link rel="stylesheet" href="style.css" /> -->
+        <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
+    </head>
+    <body>
+        <div>
+            Route
+            <input id="socketInput_route" type="text" />
+        </div>
+
+        <div>
+            Message
+            <input id="socketInput" type="text" />
+        </div>
+
+        <div>
+            Args
+            <input id="socketInput_args" type="text" />
+        </div>
+
+        <div id="counter"></div>
+        <script>
+            const socket = io('http://localhost:3000');
+            const state = {
+                message: '',
+                args: '',
+                route: '',
+            };
+            socket.on('connect', () => {
+                console.log(socket.id); // 'G5p5...'
+            });
+
+            socket.on('message', m => {
+                console.log(m);
+                document.getElementById('counter').innerHTML = m.data.c;
+            });
+
+            document.getElementById('socketInput').addEventListener('input', e => {
+                state.message = e.target.value;
+                socket.emit('message', {
+                    type: 'TEST',
+                    data: { message: state.message, args: state.args, route: state.route },
+                    time: new Date(),
+                });
+            });
+
+            document.getElementById('socketInput_args').addEventListener('input', e => {
+                state.args = e.target.value;
+                socket.emit('message', {
+                    type: 'TEST',
+                    data: { message: state.message, args: state.args, route: state.route },
+                    time: new Date(),
+                });
+            });
+
+            document.getElementById('socketInput_route').addEventListener('input', e => {
+                state.route = e.target.value;
+                socket.emit('message', {
+                    type: 'TEST',
+                    data: { message: state.message, args: state.args, route: state.route },
+                    time: new Date(),
+                });
+            });
+        </script>
+    </body>
+</html>
